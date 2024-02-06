@@ -2,12 +2,11 @@ package com.example.logowanie
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.ContactsContract.CommonDataKinds.Email
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
@@ -38,10 +37,9 @@ class MainActivity : AppCompatActivity() {
 
                 Toast.makeText(this, "", Toast.LENGTH_SHORT).show()
 
-                startActivity(Intent(this, IndexActivity::class.java).putExtra("Logowanie", tab));
+                startActivity(Intent(this, CalulatorActivity::class.java).putExtra("Logowanie", tab))
 
             }
         }
-
     }
 }
