@@ -27,17 +27,17 @@ class MainActivity : AppCompatActivity() {
             val password = findViewById<EditText>(R.id.Password).text.toString()
 
             if (email.isEmpty() || password.isEmpty())
-                Toast.makeText(this, "Fill in all fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Brakuje emailu lub hasła", Toast.LENGTH_SHORT).show()
             else if (email != "k.piatkowski07@gmail.com" || password != "kacper11")
-                Toast.makeText(this, "Login error, incorrect email or password.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Niepoprawny email lub hasło, spróbuj ponownie", Toast.LENGTH_SHORT).show()
             else {
                 zalogowano = true
                 tab[0] = email
                 tab[1] = password
 
-                Toast.makeText(this, "", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Zalogowano", Toast.LENGTH_SHORT).show()
 
-                startActivity(Intent(this, CalulatorActivity::class.java).putExtra("Logowanie", tab))
+                startActivity(Intent(this, CalculatorActivity::class.java).putExtra("Logowanie", tab))
 
             }
         }
