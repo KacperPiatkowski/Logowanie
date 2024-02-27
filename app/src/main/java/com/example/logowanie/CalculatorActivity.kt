@@ -1,181 +1,170 @@
 package com.example.logowanie
 
-import android.annotation.SuppressLint
-import android.os.Bundle
-import android.view.View
-import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import java.util.Stack
+import android.os.Bundle
+import android.text.SpannableStringBuilder
+import android.view.View
+import android.widget.TextView
+import android.widget.Toast
 
 class CalculatorActivity : AppCompatActivity() {
-    private var canAddOperation = false
-    private var canAddDecimal = true
+    private val expressionTextView: TextView by lazy {
+        findViewById<TextView>(R.id.workingsTV)
+    }
+    private val resultTextView: TextView by lazy {
+        findViewById<TextView>(R.id.resultsTV)
+    }
 
-    @SuppressLint("MissingInflatedId")
+    private var isOperator = false
+    private var hasOperator = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calculator)
-        val planets = Stack<Int>()
+    }
+    fun buttonClicked(v: View) {
+        when (v.id) {
+            R.id.btn_0 -> numberButtonClicked("0")
+            R.id.btn_1 -> numberButtonClicked("1")
+            R.id.btn_2 -> numberButtonClicked("2")
+            R.id.btn_3 -> numberButtonClicked("3")
+            R.id.btn_4 -> numberButtonClicked("4")
+            R.id.btn_5 -> numberButtonClicked("5")
+            R.id.btn_6 -> numberButtonClicked("6")
+            R.id.btn_7 -> numberButtonClicked("7")
+            R.id.btn_8 -> numberButtonClicked("8")
+            R.id.btn_9 -> numberButtonClicked("9")
 
-        val tablica = intent.getStringArrayExtra("Logowanie")
-        var zalogowano = false
-        var tab = arrayOf("", "")
-        if (tablica != null) {
-            zalogowano = true
-            tab = tablica
+            R.id.btn_plus -> operatorButtonClicked("+")
+            R.id.btn_minus -> operatorButtonClicked("-")
+            R.id.btn_multi -> operatorButtonClicked("X")
+            R.id.btn_div -> operatorButtonClicked("/")
+            R.id.btn_mod -> operatorButtonClicked("%")
+        }
+    }
+
+
+    private fun numberButtonClicked(number: String) {
+        if (isOperator) {
+            expressionTextView.append(" ")
+        }
+        isOperator = false
+
+        val expressionText = expressionTextView.text.split(" ")
+
+        expressionTextView.append(number)
+        resultTextView.text = calculateExpression()
+    }
+
+    private fun operatorButtonClicked(operator: String) {
+        if (expressionTextView.text.isEmpty()) {
+            return
+        }
+
+        when {
+            isOperator -> {
+                val text = expressionTextView.text.toString()
+                expressionTextView.text = text.dropLast(1) + operator
+            }
+            hasOperator -> {
+                Toast.makeText(this, "", Toast.LENGTH_SHORT).show()
+                return
+            }
+            else -> {
+                expressionTextView.append(" $operator")
+            }
 
         }
-        val workingsTV = findViewById<TextView>(R.id.workingsTV)
-        val resultsTV = findViewById<TextView>(R.id.resultsTV)
-        fun numberAction(view: View)
-        {
-            if(view is Button)
-            {
-                if(view.text == ".")
-                {
-                    if(canAddDecimal)
-                        workingsTV.append(view.text)
+        val ssb = SpannableStringBuilder(expressionTextView.text)
 
-                    canAddDecimal = false
-                }
-                else
-                    workingsTV.append(view.text)
+        expressionTextView.text = ssb
+        isOperator = true
+        hasOperator = true
+    }
 
-                canAddOperation = true
+    fun resultButtonClicked(v: View) {
+        val expressionTexts = expressionTextView.text.split(" ")
+        if (expressionTextView.text.isEmpty() || expressionTexts.size == 1) {
+            return
+        }
+        if (expressionTexts.size != 3 && hasOperator) {
+            Toast.makeText(this, " b", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (expressionTexts[0].isNumber().not() || expressionTexts[2].isNumber().not()) {
+            Toast.makeText(this, "c", Toast.LENGTH_SHORT).show()
+
+            return
+        }
+        val expressionText = expressionTextView.text.toString()
+        val resultText = calculateExpression()
+
+        resultTextView.text =""
+        expressionTextView.text = resultText
+
+        isOperator = false
+        hasOperator = false
+
+    }
+
+
+    private fun calculateExpression(): String {
+        val expressionTexts = expressionTextView.text.split(" ")
+
+        if (hasOperator.not() || expressionTexts.size != 3) {
+            return ""
+        } else if (expressionTexts[0].isNumber().not() || expressionTexts[2].isNumber().not()) {
+            return ""
+        }
+        val exp1 = expressionTexts[0].toBigInteger()
+        val exp2 = expressionTexts[2].toBigInteger()
+        val op = expressionTexts[1]
+
+        return when (op) {
+            "+" -> (exp1 + exp2).toString()
+            "-" -> (exp1 - exp2).toString()
+            "X" -> (exp1 * exp2).toString()
+            "%" -> (exp1 % exp2).toString()
+            "/" -> (exp1 / exp2).toString()
+            else -> ""
+        }
+    }
+    fun dotButtonClicked(v: View){
+        if(hasOperator != true) {
+            if (expressionTextView.text.length == 0) {
+                expressionTextView.append("0.")
+            } else if (!expressionTextView.text.toString().contains(".")) {
+                expressionTextView.append(".")
+            }
+        }else{
+            if(resultTextView.text.length ==0){
+                resultTextView.append("0.")
+            }else if(resultTextView.text.length !=0 &&resultTextView.text.toString().contains(".")){
+                resultTextView.append(".")
             }
         }
 
-        fun operationAction(view: View)
-        {
-            if(view is Button && canAddOperation)
-            {
-                workingsTV.append(view.text)
-                canAddOperation = false
-                canAddDecimal = true
-            }
-        }
+    }
+    fun clearButtonClicked(v: View) {
+        expressionTextView.text = ""
+        resultTextView.text = ""
+        isOperator = false
+        hasOperator =false
+    }
+    fun backButtonClicked(v: View){
+        expressionTextView.setText(expressionTextView.text.dropLast(1))
+        isOperator = false
+        hasOperator =false
+    }
 
-        fun allClearAction(view: View)
-        {
 
-            workingsTV.text = ""
-            resultsTV.text = ""
-        }
+}
 
-        fun backSpaceAction(view: View)
-        {
-            val length = workingsTV.length()
-            if(length > 0)
-                workingsTV.text = workingsTV.text.subSequence(0, length - 1)
-        }
-
-        fun equalsAction(view: View)
-        {
-            resultsTV.text = calculateResults()
-        }
-
-        private fun calculateResults(): String
-        {
-            val digitsOperators = digitsOperators()
-            if(digitsOperators.isEmpty()) return ""
-
-            val timesDivision = timesDivisionCalculate(digitsOperators)
-            if(timesDivision.isEmpty()) return ""
-
-            val result = addSubtractCalculate(timesDivision)
-            return result.toString()
-        }
-
-        private fun addSubtractCalculate(passedList: MutableList<Any>): Float
-        {
-            var result = passedList[0] as Float
-
-            for(i in passedList.indices)
-            {
-                if(passedList[i] is Char && i != passedList.lastIndex)
-                {
-                    val operator = passedList[i]
-                    val nextDigit = passedList[i + 1] as Float
-                    if (operator == '+')
-                        result += nextDigit
-                    if (operator == '-')
-                        result -= nextDigit
-                }
-            }
-
-            return result
-        }
-
-        private fun timesDivisionCalculate(passedList: MutableList<Any>): MutableList<Any>
-        {
-            var list = passedList
-            while (list.contains('x') || list.contains('/'))
-            {
-                list = calcTimesDiv(list)
-            }
-            return list
-        }
-
-        private fun calcTimesDiv(passedList: MutableList<Any>): MutableList<Any>
-        {
-            val newList = mutableListOf<Any>()
-            var restartIndex = passedList.size
-
-            for(i in passedList.indices)
-            {
-                if(passedList[i] is Char && i != passedList.lastIndex && i < restartIndex)
-                {
-                    val operator = passedList[i]
-                    val prevDigit = passedList[i - 1] as Float
-                    val nextDigit = passedList[i + 1] as Float
-                    when(operator)
-                    {
-                        'x' ->
-                        {
-                            newList.add(prevDigit * nextDigit)
-                            restartIndex = i + 1
-                        }
-                        '/' ->
-                        {
-                            newList.add(prevDigit / nextDigit)
-                            restartIndex = i + 1
-                        }
-                        else ->
-                        {
-                            newList.add(prevDigit)
-                            newList.add(operator)
-                        }
-                    }
-                }
-
-                if(i > restartIndex)
-                    newList.add(passedList[i])
-            }
-
-            return newList
-        }
-
-        private fun digitsOperators(): MutableList<Any>
-        {
-            val list = mutableListOf<Any>()
-            var currentDigit = ""
-            for(character in workingsTV.text)
-            {
-                if(character.isDigit() || character == '.')
-                    currentDigit += character
-                else
-                {
-                    list.add(currentDigit.toFloat())
-                    currentDigit = ""
-                    list.add(character)
-                }
-            }
-
-            if(currentDigit != "")
-                list.add(currentDigit.toFloat())
-
-            return list
-        }
+fun String.isNumber(): Boolean {
+    return try {
+        this.toBigInteger()
+        true
+    } catch (e: NumberFormatException) {
+        false
     }
 }

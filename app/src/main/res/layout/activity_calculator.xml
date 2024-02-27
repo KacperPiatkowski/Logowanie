@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:ignore="HardcodedText"
-    tools:context=".CalulatorActivity">
+    tools:context=".CalculatorActivity">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -51,20 +51,27 @@
 
         <Button
             style="@style/buttonNumber"
+            android:id="@+id/btn_clear"
             android:textColor="@color/red"
-            android:onClick="allClearAction"
+            android:onClick="clearButtonClicked"
             android:text="AC"/>
         <Button
             style="@style/buttonNumber"
+            android:id="@+id/btn_back"
             android:textColor="@color/red"
-            android:onClick="backSpaceAction"
-            android:text="⌫"/>
+            android:onClick="backButtonClicked"
+            android:text="⌫"
+            tools:ignore="OnClick" />
         <Button
             style="@style/buttonNumber"
+            android:onClick="buttonClicked"
             android:textColor="@color/orange"
+            android:id="@+id/btn_mod"
             android:text="%" />
         <Button
             style="@style/buttonOperator"
+            android:id="@+id/btn_div"
+            android:onClick="buttonClicked"
             android:text="/"/>
 
     </LinearLayout>
@@ -74,18 +81,25 @@
 
         <Button
             style="@style/buttonNumber"
+            android:id="@+id/btn_7"
+            android:onClick="buttonClicked"
             android:text="7"/>
 
         <Button
             style="@style/buttonNumber"
-            android:layout_gravity="center"
+            android:id="@+id/btn_8"
+            android:onClick="buttonClicked"
             android:text="8" />
 
         <Button
             style="@style/buttonNumber"
+            android:onClick="buttonClicked"
+            android:id="@+id/btn_9"
             android:text="9" />
         <Button
             style="@style/buttonOperator"
+            android:onClick="buttonClicked"
+            android:id="@+id/btn_multi"
             android:text="x"/>
 
     </LinearLayout>
@@ -95,15 +109,23 @@
 
         <Button
             style="@style/buttonNumber"
+            android:id="@+id/btn_4"
+            android:onClick="buttonClicked"
             android:text="4"/>
         <Button
             style="@style/buttonNumber"
+            android:onClick="buttonClicked"
+            android:id="@+id/btn_5"
             android:text="5"/>
         <Button
             style="@style/buttonNumber"
+            android:id="@+id/btn_6"
+            android:onClick="buttonClicked"
             android:text="6" />
         <Button
             style="@style/buttonOperator"
+            android:id="@+id/btn_minus"
+            android:onClick="buttonClicked"
             android:text="-"/>
 
     </LinearLayout>
@@ -113,15 +135,23 @@
 
         <Button
             style="@style/buttonNumber"
+            android:id="@+id/btn_1"
+            android:onClick="buttonClicked"
             android:text="1"/>
         <Button
             style="@style/buttonNumber"
+            android:id="@+id/btn_2"
+            android:onClick="buttonClicked"
             android:text="2"/>
         <Button
             style="@style/buttonNumber"
+            android:id="@+id/btn_3"
+            android:onClick="buttonClicked"
             android:text="3" />
         <Button
             style="@style/buttonOperator"
+            android:id="@+id/btn_plus"
+            android:onClick="buttonClicked"
             android:text="+"/>
 
     </LinearLayout>
@@ -131,20 +161,26 @@
 
         <Button
             style="@style/buttonNumber"
+            android:onClick="dotButtonClicked"
+            android:id="@+id/btn_dot"
             android:text="."/>
+
         <Button
+            android:id="@+id/btn_0"
             style="@style/buttonNumber"
-            android:text="0"/>
+            android:onClick="buttonClicked"
+            android:text="0" />
 
         <Button
             style="@style/buttonNumber"
+            android:id="@+id/btn_result"
             android:layout_weight="2"
             android:background="@color/orange"
-            android:onClick="equalsAction"
+            android:onClick="resultButtonClicked"
             android:text="="
             android:textColor="@color/white"
             android:textSize="40sp"
-            tools:ignore="TextContrastCheck" />
+            tools:ignore="OnClick,TextContrastCheck" />
 
     </LinearLayout>
 

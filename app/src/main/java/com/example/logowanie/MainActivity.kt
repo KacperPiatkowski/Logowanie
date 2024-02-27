@@ -41,5 +41,9 @@ class MainActivity : AppCompatActivity() {
 
             }
         }
+        findViewById<Button>(R.id.SKIP).setOnClickListener {
+            Toast.makeText(this, "Skip", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, CalculatorActivity::class.java))
+        }
     }
 }
